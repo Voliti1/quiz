@@ -126,110 +126,99 @@ const rawShortData = [
     { q: "C# 에러를 수동으로 발생시키는 키워드는?", c: "throw", r: "throw입니다. [cite: 116]" }
 ];
 
-// 1단계 -> 2단계 이동
-function goToSetup() {
+// 4. 화면 전환 및 설정 함수
+function nextToSetup() {
     nickname = document.getElementById('user-name-input').value.trim();
     if (!nickname) { alert("이름을 입력해주세요!"); return; }
-    document.getElementById('step-name').style.display = 'none';
-    document.getElementById('step-setup').style.display = 'flex';
+    
+    document.getElementById('step-name').classList.remove('active');
+    document.getElementById('step-setup').classList.add('active');
 }
 
-// 유형 설정
-function setType(type) {
+function changeType(type) {
     selectedType = type;
-    document.getElementById('type-choice').classList.toggle('active', type === 'choice');
-    document.getElementById('type-short').classList.toggle('active', type === 'short');
+    document.getElementById('type-choice').classList.toggle('selected', type === 'choice');
+    document.getElementById('type-short').classList.toggle('selected', type === 'short');
 }
 
-// 개수 설정
-function setCount(count) {
-    selectedCount = count;
-    [20, 30, 50].forEach(c => {
-        document.getElementById(`count-${c}`).classList.toggle('active', c === count);
+function changeCount(num) {
+    selectedCount = num;
+    [20, 30, 50].forEach(n => {
+        document.getElementById('cnt-' + n).classList.toggle('selected', n === num);
     });
 }
 
-// 퀴즈 시작 (랜덤 추출)
 function startQuiz() {
-    const baseSet = selectedType === 'choice' ? rawChoiceData : rawShortData;
-    // Fisher-Yates Shuffle
-    currentQuizSet = [...baseSet].sort(() => Math.random() - 0.5).slice(0, selectedCount);
+    const pool = (selectedType === 'choice') ? choiceData : shortData;
+    // 랜덤 셔플 후 선택한 개수만큼 자르기
+    currentQuizSet = [...pool].sort(() => Math.random() - 0.5).slice(0, selectedCount);
     
     currentIdx = 0;
     score = 0;
-    document.getElementById('step-setup').style.display = 'none';
-    document.getElementById('quiz-content').style.display = 'block';
+    
+    document.getElementById('step-setup').classList.remove('active');
+    document.getElementById('step-quiz').classList.add('active');
     loadQuestion();
 }
 
+// 5. 퀴즈 진행 로직
 function loadQuestion() {
     const data = currentQuizSet[currentIdx];
-    document.getElementById('progress').innerText = `QUESTION ${currentIdx + 1} / ${selectedCount}`;
+    document.getElementById('progress').innerText = `문제 ${currentIdx + 1} / ${selectedCount}`;
     document.getElementById('question').innerText = data.q;
     document.getElementById('feedback').style.display = 'none';
     document.getElementById('next-btn').style.display = 'none';
     
-    const optionsDiv = document.getElementById('options');
-    optionsDiv.innerHTML = '';
+    const container = document.getElementById('options-container');
+    container.innerHTML = '';
 
     if (selectedType === 'choice') {
         data.a.forEach((opt, i) => {
             const btn = document.createElement('button');
             btn.className = 'option';
             btn.innerText = opt;
-            btn.onclick = () => checkAnswer(i);
-            optionsDiv.appendChild(btn);
+            btn.onclick = () => checkChoice(i);
+            container.appendChild(btn);
         });
     } else {
-        optionsDiv.innerHTML = `
-            <input type="text" id="short-answer" placeholder="정답을 입력하세요" 
-                   onkeypress="if(event.keyCode==13) checkShortAnswer()">
-            <button class="main-btn" onclick="checkShortAnswer()" style="max-width: 100%;">제출하기</button>
+        container.innerHTML = `
+            <input type="text" id="answer-input" placeholder="정답을 입력하세요" style="width:100%; box-sizing:border-box;">
+            <button class="action-btn" onclick="checkShort()" style="margin-top:10px;">제출</button>
         `;
-        setTimeout(() => document.getElementById('short-answer').focus(), 100);
+        document.getElementById('answer-input').focus();
     }
 }
 
-function checkAnswer(selected) {
-    const data = currentQuizSet[currentIdx];
-    disableOptions();
-    if (selected === data.c) {
-        score++;
-        showFeedback(true);
-    } else {
-        showFeedback(false);
-    }
+function checkChoice(idx) {
+    const correctIdx = currentQuizSet[currentIdx].c;
+    const isCorrect = (idx === correctIdx);
+    if(isCorrect) score++;
+    showFeedback(isCorrect);
 }
 
-function checkShortAnswer() {
-    const input = document.getElementById('short-answer');
-    if (!input || input.disabled) return;
-
-    // 띄어쓰기 및 대소문자 제거 비교
-    const userAns = input.value.trim().toLowerCase().replace(/\s+/g, '');
-    const correctAns = currentQuizSet[currentIdx].c.toLowerCase().replace(/\s+/g, '');
+function checkShort() {
+    const input = document.getElementById('answer-input');
+    const userVal = input.value.trim().replace(/\s+/g, '').toLowerCase();
+    const correctVal = currentQuizSet[currentIdx].c.replace(/\s+/g, '').toLowerCase();
     
-    input.disabled = true;
-    if (userAns === correctAns) {
-        score++;
-        showFeedback(true);
-    } else {
-        showFeedback(false);
-    }
+    const isCorrect = (userVal === correctVal);
+    if(isCorrect) score++;
+    showFeedback(isCorrect);
 }
 
 function showFeedback(isCorrect) {
+    const fb = document.getElementById('feedback');
     const data = currentQuizSet[currentIdx];
-    const feedback = document.getElementById('feedback');
+    fb.style.display = 'block';
+    
     if (isCorrect) {
-        feedback.innerText = "✅ 정답입니다! \n" + data.r;
-        feedback.className = "feedback correct";
+        fb.className = "feedback correct";
+        fb.innerText = "✅ 정답입니다!\n" + data.r;
     } else {
-        const correctVal = selectedType === 'choice' ? data.a[data.c] : data.c;
-        feedback.innerText = `❌ 틀렸습니다. 정답: [${correctVal}] \n ${data.r}`;
-        feedback.className = "feedback wrong";
+        fb.className = "feedback wrong";
+        const ans = (selectedType === 'choice') ? data.a[data.c] : data.c;
+        fb.innerText = `❌ 틀렸습니다. (정답: ${ans})\n` + data.r;
     }
-    feedback.style.display = 'block';
     document.getElementById('next-btn').style.display = 'block';
 }
 
@@ -238,36 +227,20 @@ function nextQuestion() {
     if (currentIdx < selectedCount) {
         loadQuestion();
     } else {
-        showResult();
+        finishQuiz();
     }
 }
 
-function disableOptions() {
-    const btns = document.getElementsByClassName('option');
-    for(let b of btns) b.disabled = true;
-}
-
-function showResult() {
-    const container = document.getElementById('quiz-content');
-    const percent = Math.round((score / selectedCount) * 100);
+function finishQuiz() {
+    const container = document.getElementById('quiz-container');
+    database.ref('results/' + nickname).push({ score, total: selectedCount, date: new Date().toLocaleString() });
     
-    // 결과 저장
-    database.ref('users/' + nickname).push({
-        score: score,
-        total: selectedCount,
-        percent: percent,
-        type: selectedType,
-        date: new Date().toLocaleString()
-    });
-
     container.innerHTML = `
-        <div class="view-step">
-            <h2>학습 완료! 🎉</h2>
-            <p>${nickname}님, 정말 고생하셨습니다.</p>
-            <div class="setup-card">
-                <div style="font-size: 2.5rem; font-weight: 800; color: var(--primary); margin-bottom: 8px;">${score} / ${selectedCount}</div>
-                <div style="color: var(--text-sub);">정답률 ${percent}%</div>
-            </div>
-            <button class="main-btn" onclick="location.reload()">다시 시작하기</button>
-        </div>`;
+        <div class="step-view active">
+            <h2>퀴즈 종료!</h2>
+            <p>${nickname}님의 점수</p>
+            <h1 style="color:var(--primary); font-size:3rem;">${score} / ${selectedCount}</h1>
+            <button class="action-btn" onclick="location.reload()">다시 하기</button>
+        </div>
+    `;
 }
