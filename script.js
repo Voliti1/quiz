@@ -24,7 +24,7 @@ const quizData = [
     // [객관식 50문제]
     { type: 'choice', q: "변수의 특징으로 옳지 않은 것은?", a: ["데이터 저장 메모리 공간", "초기값 할당 가능", "한 번 설정하면 변경 불가", "재사용 가능"], c: 2, r: "변수는 초기값 할당 후 변경이 가능합니다." },
     { type: 'choice', q: "Python과 같이 런타임에 자료형이 결정되는 언어 방식은?", a: ["정적 타이핑", "강타입", "동적 타이핑", "약타입"], c: 2, r: "실행 시점에 결정되는 것은 동적 타이핑입니다." },
-    { type: 'choice', q: "C#에서 같은 어셈블리 내의 모든 코드에서 접근 가능한 제한자는?", a: ["public", "private", "internal", "protected"], c: 2, r: "internal은 동일 어셈블리(.exe, .dll) 내에서 접근 가능합니다." },
+    { type: 'choice', q: "C#에서 같은 어셈블리 내의 모든 코드에서 접근 가능하게 하는 제한자는?", a: ["public", "private", "internal", "protected"], c: 2, r: "internal은 동일 어셈블리(.exe, .dll) 내에서 접근 가능합니다." },
     { type: 'choice', q: "Python LEGB 규칙 중 'E'가 의미하는 범위는?", a: ["External", "Enclosing", "Entry", "Else"], c: 1, r: "Enclosing(중첩 함수 범위)입니다." },
     { type: 'choice', q: "순수 함수의 특징으로 옳은 것은?", a: ["상태 변경 중심", "동일 입력 시 동일 결과 반환", "매개변수 없음", "랜덤 결과 생성"], c: 1, r: "순수 함수는 외부 상태를 변경하지 않고 동일 입력-동일 결과를 보장합니다." },
     { type: 'choice', q: "객체지향 4대 원칙이 아닌 것은?", a: ["캡슐화", "상속", "컴파일", "추상화"], c: 2, r: "캡슐화, 상속, 다형성, 추상화가 핵심 원칙입니다." },
@@ -53,7 +53,7 @@ const quizData = [
     { type: 'choice', q: "Python에서 함수 내부에서 전역 변수를 수정하기 위한 키워드는?", a: ["local", "nonlocal", "global", "external"], c: 2, r: "global 키워드가 필요합니다." },
     { type: 'choice', q: "Python nonlocal 키워드의 필수 조건은?", a: ["전역 변수 존재", "외부 함수에 변수 존재", "클래스 내부", "정적 변수"], c: 1, r: "반드시 외부 함수에 해당 변수가 이미 존재해야 합니다." },
     { type: 'choice', q: "변수와 값의 타입이 엄격하게 유지되는 언어의 특징은?", a: ["약타입", "강타입", "동적 타입", "암묵적 변환"], c: 1, r: "허용되지 않은 타입 변환을 막는 것은 강타입입니다." },
-    { type: 'choice', q: "매개변수의 타입이나 개수에 따라 다르게 작동하는 다형성은?", a: ["오버라이딩", "오버로딩", "추상화", "정보 은닉"], c: 1, r: "정적 다형성인 오버로딩(Overloading)입니다." },
+    { type: 'choice', q: "매개변수의 타입이나 개수에 따라 다르게 작동하는 다형성은?", a: ["오버라이딩", "오버로딩", "추상화", "캡슐화"], c: 1, r: "정적 다형성인 오버로딩(Overloading)입니다." },
     { type: 'choice', q: "C#에서 상수와 정적 필드에 권장되는 표기법은?", a: ["camelCase", "PascalCase", "snake_case", "kebab-case"], c: 1, r: "C# 상수는 PascalCase를 주로 사용합니다." },
     { type: 'choice', q: "첫 글자를 대문자로, 중간 단어 첫 글자도 대문자로 쓰는 방식은?", a: ["PascalCase", "camelCase", "snake_case", "kebab-case"], c: 0, r: "첫 글자부터 대문자면 PascalCase입니다." },
     { type: 'choice', q: "Python에서 지원하지 않는 반복문 유형은?", a: ["for", "while", "do-while", "nested for"], c: 2, r: "Python에는 do-while문이 없습니다." },
@@ -62,7 +62,7 @@ const quizData = [
     { type: 'choice', q: "C#이나 Java에서 에러를 던질 때 사용하는 키워드는?", a: ["raise", "throw", "emit", "send"], c: 1, r: "C#은 throw를 사용합니다." },
     { type: 'choice', q: "C언어에서 변수명, 함수명에 주로 사용하는 표기법은?", a: ["PascalCase", "camelCase", "snake_case", "kebab-case"], c: 2, r: "C언어는 snake_case를 관습적으로 씁니다." },
     { type: 'choice', q: "C#의 어셈블리 단위에 해당하는 파일 확장자는?", a: [".c / .h", ".py", ".exe / .dll", ".js"], c: 2, r: "어셈블리는 보통 .exe나 .dll 파일 단위입니다." },
-    { type: 'choice', q: "클래스 내부 데이터 접근을 막고 메서드로만 허용하는 원칙은?", a: ["상속", "데이터 은닉", "다형성", "코드 재사용"], c: 1, r: "캡슐화의 핵심인 데이터 은닉입니다." },
+    { type: 'choice', q: "클래스 내부 데이터 접근을 막고 메서드로만 허용하는 원칙은?", a: ["상속", "캡슐화", "다형성", "코드 재사용"], c: 1, r: "캡슐화입니다." },
     { type: 'choice', q: "Python 문자열의 첫 문자만 대문자로 만드는 메서드는?", a: ["upper", "capitalize", "title", "startcase"], c: 1, r: "capitalize()입니다." },
     { type: 'choice', q: "try 블록에서 오류가 발생했을 때만 실행되는 블록은?", a: ["try", "except / catch", "finally", "else"], c: 1, r: "except(Python) 또는 catch 블록입니다." },
     { type: 'choice', q: "코드 재사용, 모듈화, 가독성을 위한 코드 집합은?", a: ["변수", "제어문", "함수", "자료형"], c: 2, r: "함수(Function)의 정의입니다." },
@@ -75,17 +75,17 @@ const quizData = [
 
     // [단답형 50문제]
     { type: 'short', q: "데이터를 저장할 수 있는 메모리 공간을 무엇이라 하는가?", c: "변수", r: "변수(Variable)입니다." },
-    { type: 'short', q: "자료형이 실행 시점에 결정되는 언어 방식을 무엇이라 하는가?", c: "동적 타이핑", r: "동적 타이핑(Dynamic Typing)입니다." },
+    { type: 'short', q: "자료형이 실행 시점에 결정되는 언어 방식을 무엇이라 하는가?", c: ["동적 타이핑", "동적타이핑"], r: "동적 타이핑(Dynamic Typing)입니다." },
     { type: 'short', q: "Python에서 if, else와 함께 쓰이는 'else if'용 키워드는?", c: "elif", r: "elif입니다." },
-    { type: 'short', q: "함수에 전달되는 입력값을 무엇이라 하는가?", c: "매개변수", r: "매개변수(Parameter)입니다." },
+    { type: 'short', q: "함수에 전달되는 입력값을 무엇이라 하는가?", c: ["매개변수", "파라미터", "parameter"], r: "매개변수(Parameter)입니다." },
     { type: 'short', q: "함수가 실행 결과를 돌려줄 때 사용하는 키워드는?", c: "return", r: "return(반환)입니다." },
     { type: 'short', q: "객체를 생성하기 위한 템플릿이나 틀을 무엇이라 하는가?", c: "클래스", r: "클래스(Class)입니다." },
     { type: 'short', q: "첫 글자는 소문자, 중간 단어 첫 글자는 대문자인 표기법은?", c: "camelCase", r: "카멜 케이스입니다." },
     { type: 'short', q: "데이터와 메서드를 하나로 묶어 내부를 숨기는 원칙은?", c: "캡슐화", r: "캡슐화(Encapsulation)입니다." },
     { type: 'short', q: "기존 클래스의 특성을 물려받아 확장하는 원칙은?", c: "상속", r: "상속(Inheritance)입니다." },
     { type: 'short', q: "Python 변수 검색 규칙 4단계를 뜻하는 줄임말은?", c: "LEGB", r: "Local, Enclosing, Global, Built-in입니다." },
-    { type: 'short', q: "C#에서 문자열을 숫자로 바꿀 때 null이면 에러를 내는 메서드는? (int.OOO)", c: "parse", r: "int.Parse()입니다." },
-    { type: 'short', q: "입력값에 상관없이 외부 상태를 바꾸지 않는 함수는?", c: "순수 함수", r: "순수 함수(Pure Function)입니다." },
+    { type: 'short', q: "C#에서 문자열을 숫자로 바꿀 때 null이면 에러를 내는 메서드는? (int.OOO)", c: ["parse", "Parse"], r: "int.Parse()입니다." },
+    { type: 'short', q: "입력값에 상관없이 외부 상태를 바꾸지 않는 함수는?", c: ["순수 함수", "순수함수"], r: "순수 함수(Pure Function)입니다." },
     { type: 'short', q: "Python 중첩 함수에서 외부 함수 변수 수정 시 쓰는 키워드는?", c: "nonlocal", r: "nonlocal입니다." },
     { type: 'short', q: "C#에서 같은 프로젝트(어셈블리) 내에서만 접근을 허용하는 제한자는?", c: "internal", r: "internal입니다." },
     { type: 'short', q: "UML 표기법에서 public을 나타내는 기호는?", c: "+", r: "더하기(+) 기호입니다." },
@@ -97,14 +97,14 @@ const quizData = [
     { type: 'short', q: "변수 선언 시 확보될 메모리 크기를 결정하는 요소는?", c: "자료형", r: "자료형(Type)입니다." },
     { type: 'short', q: "단어 사이에 언더바(_)를 사용하는 표기법 명칭은?", c: "snake_case", r: "스네이크 케이스입니다." },
     { type: 'short', q: "부모 클래스의 메서드를 자식에서 덮어쓰는 행위는?", c: "오버라이딩", r: "오버라이딩(Overriding)입니다." },
-    { type: 'short', q: "UML 표기법에서 private을 나타내는 기호는?", c: "-", r: "마이너스(-) 기호입니다." },
-    { type: 'short', q: "함수 내부에서 자기 자신을 호출하는 방식은?", c: "재귀", r: "재귀(Recursion)입니다." },
+    { type: 'short', q: "UML 표기법에서 private을 나타내는 기호는?", c: ["-", "마이너스 "], r: "마이너스(-) 기호입니다." },
+    { type: 'short', q: "함수 내부에서 자기 자신을 호출하는 방식은?", c: ["재귀", "재귀함수"], r: "재귀(Recursion)입니다." },
     { type: 'short', q: "Python 문자열의 첫 글자만 대문자로 바꾸는 메서드는?", c: "capitalize", r: "capitalize()입니다." },
     { type: 'short', q: "예외가 발생할 가능성이 있는 코드를 감싸는 블록 키워드는?", c: "try", r: "try 블록입니다." },
     { type: 'short', q: "예상치 못한 비정상적인 상황이나 실행 중 오류를 뜻하는 말은?", c: "예외", r: "예외(Exception)입니다." },
     { type: 'short', q: "정의된 곳 밖에서도 변수를 기억하는 Python의 특성은?", c: "클로저", r: "클로저(Closure)입니다." },
     { type: 'short', q: "Python에서 상수에 권장되는 표기 방식은? (영문 대문자)", c: "UPPER_CASE", r: "대문자와 언더바를 사용합니다." },
-    { type: 'short', q: "UML에서 추상 요소를 나타낼 때 사용하는 글자 스타일은?", c: "이탤릭", r: "이탤릭체(기울임꼴)입니다." },
+    { type: 'short', q: "UML에서 추상 요소를 나타낼 때 사용하는 글자 스타일은?", c: ["이탤릭", "이탤릭체"], r: "이탤릭체(기울임꼴)입니다." },
     { type: 'short', q: "데이터를 저장하는 공간에 붙이는 이름을 무엇이라 하는가?", c: "변수", r: "변수입니다." },
     { type: 'short', q: "반복적인 작업을 수행하기 위한 명령어 집합은?", c: "반복문", r: "반복문(Loop)입니다." },
     { type: 'short', q: "C#에서 null을 입력받으면 0을 반환해주는 변환 방식은?", c: "convert", r: "Convert.To 메서드입니다." },
@@ -121,7 +121,7 @@ const quizData = [
     { type: 'short', q: "코드 재사용을 위해 입출력과 기능을 묶은 단위는?", c: "함수", r: "함수입니다." },
     { type: 'short', q: "원본 유지하며 정렬 결과를 반환하는 Python 함수는?", c: "sorted", r: "sorted()입니다." },
     { type: 'short', q: "함수명이나 변수명에 언더바를 쓰는 표기법 명칭은?", c: "snake_case", r: "스네이크 케이스입니다." },
-    { type: 'short', q: "내부 데이터를 메서드로만 접근하게 제한하는 개념은?", c: "정보 은닉", r: "정보 은닉(Data Hiding)입니다." },
+    { type: 'short', q: "내부 데이터를 메서드로만 접근하게 제한하는 개념은?", c: "캡슐화", r: "캡슐화입니다." },
     { type: 'short', q: "문자열이 특정 문자로 끝나는지 확인하는 메서드는?", c: "endswith", r: "endswith()입니다." },
     { type: 'short', q: "C#에서 에러를 수동으로 발생시킬 때 쓰는 키워드는?", c: "throw", r: "throw입니다." }
 ];
@@ -210,10 +210,17 @@ function checkAnswer(selected) {
 
 function checkShortAnswer() {
     const input = document.getElementById('short-answer');
-    const userAnswer = input.value.trim().toLowerCase();
-    const correctAnswer = quizData[currentIdx].c.toLowerCase();
+    const userAnswer = input.value.trim().toLowerCase().replace(/\s+/g, ''); // 공백 제거 후 비교
     
-    if (userAnswer === correctAnswer) {
+    const correctAnswers = quizData[currentIdx].c; // 이제 c는 배열임
+    
+    // 배열 속 정답 중 하나라도 일치하는지 확인
+    const isCorrect = correctAnswers.some(ans => {
+        const normalizedAns = ans.toLowerCase().replace(/\s+/g, '');
+        return userAnswer === normalizedAns;
+    });
+    
+    if (isCorrect) {
         score++;
         showFeedback(true);
     } else {
