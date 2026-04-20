@@ -1,13 +1,14 @@
 // 1. Firebase 구성 설정 (본인의 Firebase 콘솔에서 복사한 것으로 교체하세요)
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "your-project-id.firebaseapp.com",
-    databaseURL: "https://your-project-id-default-rtdb.firebaseio.com",
-    projectId: "your-project-id",
-    storageBucket: "your-project-id.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-};
+    apiKey: "AIzaSyBsHbosmYs7U8y6uDuYeRaibMVoAx8-fQ4",
+    authDomain: "quiz-d2d9a.firebaseapp.com",
+    databaseURL: "https://quiz-d2d9a-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "quiz-d2d9a",
+    storageBucket: "quiz-d2d9a.firebasestorage.app",
+    messagingSenderId: "114749518417",
+    appId: "1:114749518417:web:44300ef313bb69aae2fe70",
+    measurementId: "G-JE0WRL45DK"
+  };
 
 // Firebase 초기화 (v9 compat 방식)
 firebase.initializeApp(firebaseConfig);
