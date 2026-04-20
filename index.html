@@ -3,108 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>소프트웨어공학 퀴즈</title>
+    <title>소프트웨어공학 퀴즈 마스터</title>
     <style>
         :root { 
             --primary: #4a90e2; 
             --bg: #f5f7fa; 
             --text-main: #333;
+            --text-sub: #888;
         }
 
         body { 
             font-family: 'Pretendard', sans-serif; 
             background: var(--bg); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0; padding: 20px; 
         }
 
         #quiz-container { 
-            background: white; 
-            width: 100%; 
-            max-width: 450px; 
-            padding: 40px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+            background: white; width: 100%; max-width: 500px; 
+            padding: 40px; border-radius: 24px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05); 
             position: relative;
         }
 
         /* 화면 전환용 */
-        .step-view { display: none; flex-direction: column; align-items: center; text-align: center; }
-        .step-view.active { display: flex; }
+        .view-step { display: none; flex-direction: column; align-items: center; text-align: center; }
+        .view-step.active { display: flex; }
 
-        h2 { margin-bottom: 20px; color: var(--text-main); }
-        p { margin: 10px 0; font-weight: bold; color: #555; }
+        h2 { color: var(--text-main); margin-bottom: 10px; }
+        p { color: var(--text-sub); margin-bottom: 25px; }
 
         input[type="text"] { 
-            padding: 14px; width: 80%; margin-bottom: 20px; 
-            border: 2px solid #eee; border-radius: 12px; outline: none;
+            padding: 14px; width: 85%; margin-bottom: 20px; 
+            border: 2px solid #edf2f7; border-radius: 12px; outline: none; font-size: 1rem;
         }
 
-        .btn-group { display: flex; gap: 8px; margin-bottom: 25px; justify-content: center; }
-        
+        .setup-card { background: #f8fbff; border-radius: 16px; padding: 20px; width: 100%; margin-bottom: 20px; box-sizing: border-box; }
+        .setup-label { font-weight: bold; margin-bottom: 15px; display: block; color: var(--text-main); }
+
+        .btn-group { display: flex; gap: 10px; justify-content: center; }
         .toggle-btn { 
-            padding: 10px 18px; border: 2px solid #eee; background: white; 
-            border-radius: 10px; cursor: pointer; font-weight: bold; color: #888;
+            padding: 10px 20px; border: 2px solid #e2e8f0; background: white; 
+            border-radius: 10px; cursor: pointer; font-weight: 600; color: #718096;
             transition: all 0.2s;
         }
-        /* 버튼 선택되었을 때 스타일 */
-        .toggle-btn.selected { border-color: var(--primary); color: var(--primary); background: #f0f7ff; }
+        .toggle-btn.selected { border-color: var(--primary); background: #ebf4ff; color: var(--primary); }
 
-        .action-btn { 
-            background: var(--primary); color: white; border: none; 
-            padding: 15px; width: 100%; border-radius: 12px; 
-            font-size: 1rem; font-weight: bold; cursor: pointer;
+        .main-btn { 
+            padding: 16px; background: var(--primary); color: white; border: none; 
+            border-radius: 12px; width: 100%; font-size: 1.1rem; font-weight: bold; cursor: pointer;
         }
 
-        /* 퀴즈 진행 스타일 */
-        .question { font-size: 1.2rem; font-weight: bold; margin-bottom: 20px; text-align: left; width: 100%; }
+        /* 퀴즈진행 */
+        .question { font-size: 1.25rem; font-weight: 700; margin-bottom: 25px; text-align: left; width: 100%; line-height: 1.5; }
         .option { 
-            width: 100%; text-align: left; padding: 15px; margin-bottom: 10px; 
-            border: 1px solid #eee; background: #fff; cursor: pointer; border-radius: 10px;
+            width: 100%; text-align: left; padding: 16px; margin-bottom: 12px; 
+            border: 2px solid #f0f4f8; border-radius: 14px; background: #fff; cursor: pointer;
         }
-        .feedback { margin-top: 15px; padding: 15px; border-radius: 10px; display: none; text-align: left; font-size: 0.9rem; }
-        .correct { background: #e6fffa; color: #234e52; }
-        .wrong { background: #fff5f5; color: #742a2a; }
+        .option:hover { border-color: var(--primary); background: #f8fbff; }
+
+        .feedback { margin-top: 20px; padding: 20px; border-radius: 14px; display: none; text-align: left; }
+        .correct { background: #f0fff4; border: 1px solid #c6f6d5; color: #276749; }
+        .wrong { background: #fff5f5; border: 1px solid #fed7d7; color: #9b2c2c; }
     </style>
 </head>
 <body>
 
 <div id="quiz-container">
-    <div id="step-name" class="step-view active">
-        <h2>반갑습니다!</h2>
-        <p>닉네임을 입력해주세요</p>
+    <div id="step-name" class="view-step active">
+        <h2>소프트웨어공학 퀴즈</h2>
+        <p>닉네임을 입력하고 시작하세요</p>
         <input type="text" id="user-name-input" placeholder="이름 입력">
-        <button class="action-btn" onclick="nextToSetup()">다음 단계</button>
+        <button class="main-btn" onclick="toSetup()">다음</button>
     </div>
 
-    <div id="step-setup" class="step-view">
+    <div id="step-setup" class="view-step">
         <h2>퀴즈 설정</h2>
-        
-        <p>문제 유형</p>
-        <div class="btn-group">
-            <button id="type-choice" class="toggle-btn selected" onclick="changeType('choice')">객관식</button>
-            <button id="type-short" class="toggle-btn" onclick="changeType('short')">단답형</button>
+        <div class="setup-card">
+            <span class="setup-label">문제 유형</span>
+            <div class="btn-group">
+                <button id="type-choice" class="toggle-btn selected" onclick="setType('choice')">객관식</button>
+                <button id="type-short" class="toggle-btn" onclick="setType('short')">단답형</button>
+            </div>
         </div>
-
-        <p>문제 개수</p>
-        <div class="btn-group">
-            <button id="cnt-20" class="toggle-btn selected" onclick="changeCount(20)">20문제</button>
-            <button id="cnt-30" class="toggle-btn" onclick="changeCount(30)">30문제</button>
-            <button id="cnt-50" class="toggle-btn" onclick="changeCount(50)">50문제</button>
+        <div class="setup-card">
+            <span class="setup-label">문제 수</span>
+            <div class="btn-group">
+                <button id="cnt-20" class="toggle-btn selected" onclick="setCount(20)">20개</button>
+                <button id="cnt-30" class="toggle-btn" onclick="setCount(30)">30개</button>
+                <button id="cnt-50" class="toggle-btn" onclick="setCount(50)">50개</button>
+            </div>
         </div>
-
-        <button class="action-btn" onclick="startQuiz()">퀴즈 시작하기</button>
+        <button class="main-btn" onclick="toQuiz()">퀴즈 시작하기</button>
     </div>
 
-    <div id="step-quiz" class="step-view">
-        <div id="progress" style="margin-bottom:10px; color:#888; font-size:0.8rem;"></div>
+    <div id="step-quiz" class="view-step">
+        <div id="progress" style="margin-bottom:10px; color:var(--text-sub); font-weight:600;"></div>
         <div id="question" class="question"></div>
-        <div id="options-container" style="width:100%;"></div>
+        <div id="quiz-options" style="width:100%;"></div>
         <div id="feedback" class="feedback"></div>
-        <button id="next-btn" class="action-btn" onclick="nextQuestion()" style="display:none; margin-top:15px;">다음 문제</button>
+        <button id="next-btn" class="main-btn" onclick="nextQuestion()" style="display:none; margin-top:20px;">다음 문제</button>
     </div>
 </div>
 
