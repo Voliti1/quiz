@@ -126,13 +126,14 @@
         }
     </style>
 </head>
-
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
-<script src="script.js"></script>
-
 <body>
+
+<div id="login-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; border-radius: 20px;">
+    <h2>소프트웨어공학 퀴즈 100</h2>
+    <p>이름을 입력하고 시작하세요</p>
+    <input type="text" id="user-name-input" placeholder="이름 입력" style="padding: 10px; margin-bottom: 10px; border: 2px solid #eee; border-radius: 8px;">
+    <button onclick="startWithNickname()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">퀴즈 시작</button>
+</div>
 
 <div id="quiz-container">
     <div id="quiz-content">
@@ -143,5 +144,8 @@
         <button id="next-btn" onclick="nextQuestion()">다음 문제로</button>
     </div>
 </div>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

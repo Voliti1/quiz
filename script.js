@@ -8,18 +8,16 @@ const firebaseConfig = {
     messagingSenderId: "114749518417",
     appId: "1:114749518417:web:44300ef313bb69aae2fe70",
     measurementId: "G-JE0WRL45DK"
-  };
+};
 
 // Firebase 초기화 (v9 compat 방식)
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// 사용자 식별 (로그인 기능이 없으므로 브라우저별 고유 ID 생성)
-let userId = localStorage.getItem('quiz_user_id');
-if (!userId) {
-    userId = 'user_' + Math.random().toString(36).substr(2, 9);
-    localStorage.setItem('quiz_user_id', userId);
-}
+// 전역 변수 설정
+let nickname = ""; 
+let currentIdx = 0;
+let score = 0;
 
 // 2. 퀴즈 데이터 (객관식 50개 + 단답형 50개 = 총 100개)
 const quizData = [
@@ -44,7 +42,6 @@ const quizData = [
     { type: 'choice', q: "Python 변수 탐색 우선순위 1위는?", a: ["Global", "Built-in", "Local", "Enclosing"], c: 2, r: "Local(지역)이 가장 우선입니다." },
     { type: 'choice', q: "에러 발생 시 무조건 실행되는 블록은?", a: ["try", "catch", "finally", "else"], c: 2, r: "finally 블록입니다." },
     { type: 'choice', q: "C언어에서 함수 정보를 미리 알리는 것은?", a: ["함수 본문", "함수 원형", "매개변수", "반환값"], c: 1, r: "함수 원형(Prototype) 선언입니다." },
-    // ... (지면상 축약, 실제 파일에는 50개까지 유사한 정제된 문제들이 들어갑니다)
     { type: 'choice', q: "Python에서 문자열 끝을 확인하는 메서드?", a: ["startswith", "endswith", "find", "index"], c: 1, r: "endswith()입니다." },
     { type: 'choice', q: "C# Convert.ToInt32(null) 결과는?", a: ["0", "에러", "null", "-1"], c: 0, r: "Convert는 null을 0으로 처리합니다." },
     { type: 'choice', q: "복잡한 세부사항을 감추고 핵심만 남기는 것?", a: ["상속", "다형성", "추상화", "캡슐화"], c: 2, r: "추상화(Abstraction)입니다." },
@@ -129,29 +126,52 @@ const quizData = [
     { type: 'short', q: "C#에서 에러를 강제로 발생시킬 때 쓰는 키워드는?", c: "throw", r: "throw입니다." }
 ];
 
-let currentIdx = 0;
-let score = 0;
-
-// 페이지 로드 시 Firebase에서 데이터 불러오기
+// 초기 실행 방지 (이름 입력 전까지)
 window.onload = () => {
-    database.ref('users/' + userId).once('value').then((snapshot) => {
+    // 닉네임 입력 오버레이 표시 여부 제어는 HTML 수정이 필요할 수 있습니다.
+    // 여기서는 단순히 로딩 상태만 유지합니다.
+    document.getElementById('progress').innerText = "이름을 입력해주세요.";
+};
+
+// 닉네임 입력 후 퀴즈 시작 함수
+function startWithNickname() {
+    const input = document.getElementById('user-name-input').value.trim();
+    if (!input) {
+        alert("이름을 입력해주세요!");
+        return;
+    }
+    nickname = input;
+
+    // Firebase에서 해당 닉네임의 기록 확인
+    database.ref('users/' + nickname).once('value').then((snapshot) => {
         const data = snapshot.val();
+        
+        // 입력창 숨기기 (HTML에 login-overlay ID가 있어야 함)
+        const overlay = document.getElementById('login-overlay');
+        if(overlay) overlay.style.display = 'none';
+
         if (data && data.lastIndex < quizData.length) {
-            if (confirm("이전에 풀던 기록이 있습니다. 이어 푸시겠습니까?")) {
+            if (confirm(`${nickname}님, 이전 기록이 있습니다. 이어 푸시겠습니까?`)) {
                 currentIdx = data.lastIndex;
                 score = data.totalScore;
             } else {
-                resetFirebaseData();
+                // 새로 시작 시 해당 유저 데이터 초기화
+                database.ref('users/' + nickname).remove();
+                currentIdx = 0;
+                score = 0;
             }
         }
         loadQuestion();
+    }).catch(error => {
+        console.error("데이터 로드 오류:", error);
+        loadQuestion(); // 오류 시에도 일단 시작
     });
-};
+}
 
 function loadQuestion() {
     const data = quizData[currentIdx];
     
-    // Firebase에 현재 진행 상황 실시간 저장
+    // Firebase에 실시간 저장 (진행도 갱신)
     saveProgress();
 
     document.getElementById('progress').innerText = `QUESTION ${currentIdx + 1} / ${quizData.length}`;
@@ -177,7 +197,7 @@ function loadQuestion() {
             <button onclick="checkShortAnswer()" 
                     style="margin-top:10px; width:100%; padding:10px; background:#4a90e2; color:white; border:none; border-radius:10px; cursor:pointer; font-weight:bold;">제출하기</button>
         `;
-        // 엔터키 지원
+        document.getElementById('short-answer').focus();
         document.getElementById('short-answer').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') checkShortAnswer();
         });
@@ -233,7 +253,8 @@ function nextQuestion() {
 }
 
 function saveProgress() {
-    database.ref('users/' + userId).set({
+    if (!nickname) return;
+    database.ref('users/' + nickname).set({
         lastIndex: currentIdx,
         totalScore: score,
         lastUpdated: Date.now()
@@ -241,7 +262,7 @@ function saveProgress() {
 }
 
 function resetFirebaseData() {
-    database.ref('users/' + userId).remove();
+    if (nickname) database.ref('users/' + nickname).remove();
     currentIdx = 0;
     score = 0;
 }
@@ -252,14 +273,18 @@ function disableOptions() {
 }
 
 function showResult() {
-    resetFirebaseData(); // 종료 시 데이터 초기화
     const container = document.getElementById('quiz-content');
     const grade = (score / quizData.length) * 100;
+    
+    // 종료 시에도 최종 점수 기록 유지 (reset 시키지 않음)
+    saveProgress(); 
+
     container.innerHTML = `
         <div class="summary">
             <h2>학습 완료! 🎉</h2>
+            <p style="font-size:1.2rem; color:#4a90e2;">${nickname}님 수고하셨습니다.</p>
             <p class="score-text">${score} / ${quizData.length} 정답</p>
             <p>정답률: ${Math.round(grade)}%</p>
-            <button class="retry-btn" onclick="location.reload()">처음부터 다시 풀기</button>
+            <button class="retry-btn" onclick="location.reload()">다른 이름으로 시작</button>
         </div>`;
 }
