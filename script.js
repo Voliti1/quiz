@@ -185,15 +185,22 @@ function loadQuestion() {
         });
     } else {
         optionsDiv.innerHTML = `
-            <input type="text" id="short-answer" placeholder="정답 입력 (한글/영어)" 
-                   style="width:100%; padding:15px; border-radius:10px; border:2px solid #eee; font-size:1rem;">
-            <button onclick="checkShortAnswer()" 
+            <input type="text" id="short-answer" placeholder="정답 입력 후 엔터 또는 제출" 
+                   style="width:100%; padding:15px; border-radius:10px; border:2px solid #eee; font-size:1rem; box-sizing: border-box;">
+            <button id="short-submit-btn" onclick="checkShortAnswer()" 
                     style="margin-top:10px; width:100%; padding:10px; background:#4a90e2; color:white; border:none; border-radius:10px; cursor:pointer; font-weight:bold;">제출하기</button>
         `;
-        document.getElementById('short-answer').focus();
-        document.getElementById('short-answer').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') checkShortAnswer();
-        });
+        
+        // 렌더링 후 포커스 및 이벤트 리스너 재등록
+        setTimeout(() => {
+            const inputField = document.getElementById('short-answer');
+            if(inputField) {
+                inputField.focus();
+                inputField.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !inputField.disabled) checkShortAnswer();
+                });
+            }
+        }, 0);
     }
 }
 
@@ -210,13 +217,17 @@ function checkAnswer(selected) {
 
 function checkShortAnswer() {
     const input = document.getElementById('short-answer');
-    const userAnswer = input.value.trim().toLowerCase().replace(/\s+/g, ''); // 공백 제거 후 비교
+    if (!input) return; // 요소가 없으면 종료
+
+    const userAnswer = input.value.trim().toLowerCase().replace(/\s+/g, ''); 
+    const dataC = quizData[currentIdx].c;
     
-    const correctAnswers = quizData[currentIdx].c; // 이제 c는 배열임
+    // 정답 데이터를 무조건 배열 형태로 변환하여 처리
+    const correctAnswers = Array.isArray(dataC) ? dataC : [dataC];
     
-    // 배열 속 정답 중 하나라도 일치하는지 확인
+    // 입력값과 정답 배열 중 하나라도 일치하는지 확인
     const isCorrect = correctAnswers.some(ans => {
-        const normalizedAns = ans.toLowerCase().replace(/\s+/g, '');
+        const normalizedAns = String(ans).toLowerCase().replace(/\s+/g, '');
         return userAnswer === normalizedAns;
     });
     
@@ -226,6 +237,11 @@ function checkShortAnswer() {
     } else {
         showFeedback(false);
     }
+
+    // 입력창 비활성화 (객관식 버튼 disable과 통일성)
+    input.disabled = true;
+    const submitBtn = input.nextElementSibling;
+    if (submitBtn) submitBtn.disabled = true;
 }
 
 function showFeedback(isCorrect) {
@@ -235,7 +251,9 @@ function showFeedback(isCorrect) {
         feedback.innerText = "✅ 정답입니다! \n" + data.r;
         feedback.className = "feedback correct";
     } else {
-        const correctVal = data.type === 'choice' ? data.a[data.c] : data.c;
+        const correctVal = data.type === 'choice'
+        ? data.a[data.c]
+        : (Array.isArray(data.c) ? data.c.join(", ") : data.c);
         feedback.innerText = `❌ 틀렸습니다. \n 정답: [${correctVal}] \n ${data.r}`;
         feedback.className = "feedback wrong";
     }
