@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>소프트웨어공학 퀴즈</title>
+    <title>소프트웨어공학 퀴즈 마스터</title>
     <style>
-        /* 디자인 시스템 */
         :root { 
             --primary: #4a90e2; 
             --bg: #f5f7fa; 
@@ -31,119 +30,84 @@
             padding: 40px; 
             border-radius: 20px; 
             box-shadow: 0 15px 35px rgba(0,0,0,0.08); 
+            position: relative;
+            min-height: 400px;
         }
 
-        /* 상단 진행 바 */
-        .progress { 
-            font-size: 14px; 
-            font-weight: 600;
-            color: var(--text-sub); 
-            margin-bottom: 15px; 
-            letter-spacing: 1px;
+        .overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            background: white; border-radius: 20px; z-index: 10;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 20px; box-sizing: border-box; text-align: center;
         }
 
-        /* 질문 스타일 */
-        .question { 
-            font-size: 1.4rem; 
-            font-weight: 700; 
-            margin-bottom: 25px; 
-            line-height: 1.5;
-            color: var(--text-main);
+        h2 { color: var(--primary); margin-bottom: 10px; }
+        input[type="text"] { padding: 12px; width: 80%; margin-bottom: 15px; border: 2px solid #eee; border-radius: 8px; font-size: 1rem; }
+        
+        .setup-group { margin-bottom: 20px; width: 100%; }
+        .setup-group p { font-weight: bold; margin-bottom: 10px; color: var(--text-main); }
+        .btn-group { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+        
+        button { 
+            padding: 12px 20px; border: 2px solid var(--primary); background: white; 
+            color: var(--primary); border-radius: 8px; cursor: pointer; font-weight: 600;
+            transition: all 0.2s;
         }
+        button.selected { background: var(--primary); color: white; }
+        button.start-btn { background: var(--primary); color: white; width: 80%; margin-top: 20px; font-size: 1.1rem; }
 
-        /* 보기 버튼 스타일 */
-        .options { 
-            display: grid; 
-            gap: 12px; 
-        }
+        .progress { font-size: 14px; font-weight: 600; color: var(--text-sub); margin-bottom: 15px; }
+        .question { font-size: 1.3rem; font-weight: 700; margin-bottom: 25px; line-height: 1.5; color: var(--text-main); }
+        .options { display: grid; gap: 12px; }
+        button.option { padding: 15px; border: 2px solid #f0f0f0; border-radius: 12px; background: white; text-align: left; color: #444; }
+        button.option:hover { border-color: var(--primary); background: #f0f7ff; }
 
-        button.option { 
-            padding: 18px; 
-            border: 2px solid #f0f0f0; 
-            border-radius: 12px; 
-            background: white; 
-            cursor: pointer; 
-            text-align: left; 
-            transition: all 0.2s ease; 
-            font-size: 1.05rem;
-            color: #444;
-        }
+        .feedback { margin-top: 20px; padding: 15px; border-radius: 12px; display: none; }
+        .correct { background: #e6fffa; color: #234e52; border: 1px solid #38b2ac; }
+        .wrong { background: #fff5f5; color: #742a2a; border: 1px solid #feb2b2; }
 
-        button.option:hover { 
-            border-color: var(--primary); 
-            background: #f0f7ff; 
-            transform: translateY(-2px);
-        }
-
-        button.option:disabled {
-            cursor: default;
-            transform: none;
-        }
-
-        /* 피드백(정답/오답) 스타일 */
-        .feedback { 
-            margin-top: 25px; 
-            padding: 20px; 
-            border-radius: 12px; 
-            display: none; 
-            line-height: 1.6;
-            font-weight: 500;
-        }
-
-        .correct { background: #e6fffa; border: 1px solid #38b2ac; color: #234e52; }
-        .wrong { background: #fff5f5; border: 1px solid #feb2b2; color: #742a2a; }
-
-        /* 다음 버튼 */
-        #next-btn { 
-            margin-top: 25px; 
-            width: 100%; 
-            padding: 18px; 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            border-radius: 12px; 
-            cursor: pointer; 
-            display: none; 
-            font-size: 1.1rem;
-            font-weight: 700;
-            transition: opacity 0.2s;
-        }
-
-        #next-btn:hover { opacity: 0.9; }
-
-        /* 결과 화면 전용 */
-        .summary { text-align: center; }
-        .summary h2 { font-size: 2rem; color: var(--primary); margin-bottom: 10px; }
-        .score-text { font-size: 1.5rem; margin: 20px 0; font-weight: 600; }
-        .retry-btn {
-            padding: 12px 30px;
-            border-radius: 8px;
-            border: none;
-            background: var(--primary);
-            color: white;
-            cursor: pointer;
-            font-size: 1rem;
-        }
+        #next-btn { margin-top: 20px; width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: 12px; cursor: pointer; display: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div id="login-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: white; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; border-radius: 20px;">
-    <h2>소프트웨어공학 퀴즈 100</h2>
-    <p>이름을 입력하고 시작하세요</p>
-    <input type="text" id="user-name-input" placeholder="이름 입력" style="padding: 10px; margin-bottom: 10px; border: 2px solid #eee; border-radius: 8px;">
-    <button onclick="startWithNickname()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">퀴즈 시작</button>
-</div>
-
 <div id="quiz-container">
-    <div id="quiz-content">
-        <div class="progress" id="progress">준비 중...</div>
-        <div class="question" id="question">문제를 불러오고 있습니다.</div>
+    <div id="step-name" class="overlay">
+        <h2>소프트웨어공학 퀴즈</h2>
+        <p>닉네임을 입력해주세요</p>
+        <input type="text" id="user-name-input" placeholder="이름 입력">
+        <button class="start-btn" onclick="goToSetup()">다음</button>
+    </div>
+
+    <div id="step-setup" class="overlay" style="display: none;">
+        <h2>퀴즈 설정</h2>
+        <div class="setup-group">
+            <p>문제 유형</p>
+            <div class="btn-group">
+                <button id="type-choice" class="selected" onclick="setType('choice')">객관식</button>
+                <button id="type-short" onclick="setType('short')">단답형</button>
+            </div>
+        </div>
+        <div class="setup-group">
+            <p>문제 수</p>
+            <div class="btn-group">
+                <button id="count-20" class="selected" onclick="setCount(20)">20문제</button>
+                <button id="count-30" onclick="setCount(30)">30문제</button>
+                <button id="count-50" onclick="setCount(50)">50문제</button>
+            </div>
+        </div>
+        <button class="start-btn" onclick="startQuiz()">퀴즈 시작하기</button>
+    </div>
+
+    <div id="quiz-content" style="display: none;">
+        <div class="progress" id="progress"></div>
+        <div class="question" id="question"></div>
         <div class="options" id="options"></div>
         <div id="feedback" class="feedback"></div>
-        <button id="next-btn" onclick="nextQuestion()">다음 문제로</button>
+        <button id="next-btn" onclick="nextQuestion()">다음 문제</button>
     </div>
 </div>
+
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="script.js"></script>
