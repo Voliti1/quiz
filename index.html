@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>소프트웨어공학 퀴즈</title>
+    <style>
+        /* 디자인 시스템 */
+        :root { 
+            --primary: #4a90e2; 
+            --bg: #f5f7fa; 
+            --text-main: #333;
+            --text-sub: #888;
+        }
+
+        body { 
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; 
+            background: var(--bg); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px; 
+        }
+
+        #quiz-container { 
+            background: white; 
+            width: 100%; 
+            max-width: 600px; 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08); 
+        }
+
+        /* 상단 진행 바 */
+        .progress { 
+            font-size: 14px; 
+            font-weight: 600;
+            color: var(--text-sub); 
+            margin-bottom: 15px; 
+            letter-spacing: 1px;
+        }
+
+        /* 질문 스타일 */
+        .question { 
+            font-size: 1.4rem; 
+            font-weight: 700; 
+            margin-bottom: 25px; 
+            line-height: 1.5;
+            color: var(--text-main);
+        }
+
+        /* 보기 버튼 스타일 */
+        .options { 
+            display: grid; 
+            gap: 12px; 
+        }
+
+        button.option { 
+            padding: 18px; 
+            border: 2px solid #f0f0f0; 
+            border-radius: 12px; 
+            background: white; 
+            cursor: pointer; 
+            text-align: left; 
+            transition: all 0.2s ease; 
+            font-size: 1.05rem;
+            color: #444;
+        }
+
+        button.option:hover { 
+            border-color: var(--primary); 
+            background: #f0f7ff; 
+            transform: translateY(-2px);
+        }
+
+        button.option:disabled {
+            cursor: default;
+            transform: none;
+        }
+
+        /* 피드백(정답/오답) 스타일 */
+        .feedback { 
+            margin-top: 25px; 
+            padding: 20px; 
+            border-radius: 12px; 
+            display: none; 
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .correct { background: #e6fffa; border: 1px solid #38b2ac; color: #234e52; }
+        .wrong { background: #fff5f5; border: 1px solid #feb2b2; color: #742a2a; }
+
+        /* 다음 버튼 */
+        #next-btn { 
+            margin-top: 25px; 
+            width: 100%; 
+            padding: 18px; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            display: none; 
+            font-size: 1.1rem;
+            font-weight: 700;
+            transition: opacity 0.2s;
+        }
+
+        #next-btn:hover { opacity: 0.9; }
+
+        /* 결과 화면 전용 */
+        .summary { text-align: center; }
+        .summary h2 { font-size: 2rem; color: var(--primary); margin-bottom: 10px; }
+        .score-text { font-size: 1.5rem; margin: 20px 0; font-weight: 600; }
+        .retry-btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <div id="quiz-content">
+        <div class="progress" id="progress">준비 중...</div>
+        <div class="question" id="question">문제를 불러오고 있습니다.</div>
+        <div class="options" id="options"></div>
+        <div id="feedback" class="feedback"></div>
+        <button id="next-btn" onclick="nextQuestion()">다음 문제로</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
