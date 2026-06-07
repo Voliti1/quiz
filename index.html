@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>소프트웨어공학 퀴즈 마스터</title>
+    <title>반도체 제조공정 퀴즈</title>
     <style>
         :root { 
             --primary: #4a90e2; 
@@ -38,17 +38,6 @@
             border: 2px solid #edf2f7; border-radius: 12px; outline: none; font-size: 1rem;
         }
 
-        .setup-card { background: #f8fbff; border-radius: 16px; padding: 20px; width: 100%; margin-bottom: 20px; box-sizing: border-box; }
-        .setup-label { font-weight: bold; margin-bottom: 15px; display: block; color: var(--text-main); }
-
-        .btn-group { display: flex; gap: 10px; justify-content: center; }
-        .toggle-btn { 
-            padding: 10px 20px; border: 2px solid #e2e8f0; background: white; 
-            border-radius: 10px; cursor: pointer; font-weight: 600; color: #718096;
-            transition: all 0.2s;
-        }
-        .toggle-btn.selected { border-color: var(--primary); background: #ebf4ff; color: var(--primary); }
-
         .main-btn { 
             padding: 16px; background: var(--primary); color: white; border: none; 
             border-radius: 12px; width: 100%; font-size: 1.1rem; font-weight: bold; cursor: pointer;
@@ -56,13 +45,26 @@
 
         /* 퀴즈진행 */
         .question { font-size: 1.25rem; font-weight: 700; margin-bottom: 25px; text-align: left; width: 100%; line-height: 1.5; }
+        
+        #quiz-image {
+            width: 100%;
+            max-height: 220px;
+            object-fit: contain;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #edf2f7;
+            background: #fcfcfc;
+            display: none;
+        }
+
         .option { 
             width: 100%; text-align: left; padding: 16px; margin-bottom: 12px; 
             border: 2px solid #f0f4f8; border-radius: 14px; background: #fff; cursor: pointer;
+            font-size: 0.95rem; line-height: 1.4;
         }
         .option:hover { border-color: var(--primary); background: #f8fbff; }
 
-        .feedback { margin-top: 20px; padding: 20px; border-radius: 14px; display: none; text-align: left; }
+        .feedback { margin-top: 20px; padding: 20px; border-radius: 14px; display: none; text-align: left; white-space: pre-wrap; line-height: 1.5; }
         .correct { background: #f0fff4; border: 1px solid #c6f6d5; color: #276749; }
         .wrong { background: #fff5f5; border: 1px solid #fed7d7; color: #9b2c2c; }
     </style>
@@ -71,34 +73,15 @@
 
 <div id="quiz-container">
     <div id="step-name" class="view-step active">
-        <h2>소프트웨어공학 퀴즈</h2>
+        <h2>반도체 제조공정 퀴즈</h2>
         <p>닉네임을 입력하고 시작하세요</p>
         <input type="text" id="user-name-input" placeholder="이름 입력">
-        <button class="main-btn" onclick="toSetup()">다음</button>
-    </div>
-
-    <div id="step-setup" class="view-step">
-        <h2>퀴즈 설정</h2>
-        <div class="setup-card">
-            <span class="setup-label">문제 유형</span>
-            <div class="btn-group">
-                <button id="type-choice" class="toggle-btn selected" onclick="setType('choice')">객관식</button>
-                <button id="type-short" class="toggle-btn" onclick="setType('short')">단답형</button>
-            </div>
-        </div>
-        <div class="setup-card">
-            <span class="setup-label">문제 수</span>
-            <div class="btn-group">
-                <button id="cnt-20" class="toggle-btn selected" onclick="setCount(20)">20개</button>
-                <button id="cnt-30" class="toggle-btn" onclick="setCount(30)">30개</button>
-                <button id="cnt-50" class="toggle-btn" onclick="setCount(50)">50개</button>
-            </div>
-        </div>
         <button class="main-btn" onclick="toQuiz()">퀴즈 시작하기</button>
     </div>
 
     <div id="step-quiz" class="view-step">
         <div id="progress" style="margin-bottom:10px; color:var(--text-sub); font-weight:600;"></div>
+        <img id="quiz-image" src="" alt="문제 그림">
         <div id="question" class="question"></div>
         <div id="quiz-options" style="width:100%;"></div>
         <div id="feedback" class="feedback"></div>
